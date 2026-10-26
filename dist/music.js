@@ -1,10 +1,13 @@
 const musicButton = document.querySelector('.music-toggle');
 const soundtrack = document.querySelector('#soundtrack');
 const musicStatus = document.querySelector('#music-status');
-let wantsMusic = false;
+let wantsMusic = true;
+let waitingForGesture = false;
 let fadeFrame;
+let playRequest = 0;
 
-soundtrack.volume = 0;
+// Keep the first play attempt audible so browser autoplay permissions apply.
+soundtrack.volume = .01;
 musicButton.hidden = false;
 
 function showMusicState(playing) {
@@ -25,48 +28,95 @@ function fadeTo(target, done) {
   fadeFrame = requestAnimationFrame(frame);
 }
 
+function clearGestureStart() {
+  waitingForGesture = false;
+  document.removeEventListener('click', startFromGesture, true);
+  document.removeEventListener('keydown', startFromGesture, true);
+}
+
+function waitForGesture() {
+  if (waitingForGesture) return;
+  waitingForGesture = true;
+  document.addEventListener('click', startFromGesture, true);
+  document.addEventListener('keydown', startFromGesture, true);
+}
+
+function startFromGesture(event) {
+  if (!wantsMusic || document.hidden || event.target.closest?.('.music-toggle')) return;
+  if (event.type === 'keydown' && (event.metaKey || event.ctrlKey || event.altKey || !['Enter', ' '].includes(event.key))) return;
+  clearGestureStart();
+  startMusic();
+}
+
 async function startMusic() {
+  if (!wantsMusic || document.hidden) return;
+  const request = ++playRequest;
   musicButton.setAttribute('aria-busy', 'true');
   if (soundtrack.error) soundtrack.load();
+  if (soundtrack.volume === 0) soundtrack.volume = .01;
   try {
     await soundtrack.play();
+    if (request !== playRequest) return;
     if (!wantsMusic || document.hidden) {
       soundtrack.pause();
       return;
     }
+    clearGestureStart();
     showMusicState(true);
     musicStatus.textContent = '';
     fadeTo(.45);
-  } catch {
-    wantsMusic = false;
+  } catch (error) {
+    if (request !== playRequest) return;
     showMusicState(false);
-    musicStatus.textContent = 'Audio non disponibile. Tocca musica per riprovare.';
+    if (error.name === 'NotAllowedError') {
+      // Autoplay can be blocked; retry synchronously on the first user gesture.
+      musicStatus.textContent = '';
+      waitForGesture();
+    } else {
+      wantsMusic = false;
+      clearGestureStart();
+      musicStatus.textContent = 'Audio non disponibile. Tocca musica per riprovare.';
+    }
   } finally {
-    musicButton.setAttribute('aria-busy', 'false');
+    if (request === playRequest) musicButton.setAttribute('aria-busy', 'false');
   }
 }
 
 musicButton.addEventListener('click', () => {
-  wantsMusic = !wantsMusic;
-  if (wantsMusic) startMusic();
-  else {
+  if (waitingForGesture || !wantsMusic) {
+    wantsMusic = true;
+    clearGestureStart();
+    startMusic();
+  } else {
+    wantsMusic = false;
+    ++playRequest;
+    clearGestureStart();
     showMusicState(false);
+    musicButton.setAttribute('aria-busy', 'false');
     fadeTo(0, () => soundtrack.pause());
   }
 });
 
-// Audio follows the tab's visibility; the visitor's on/off preference is retained.
+// Preserve the visitor's explicit mute choice while following tab visibility.
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
+    ++playRequest;
     cancelAnimationFrame(fadeFrame);
     soundtrack.pause();
     soundtrack.volume = 0;
+    musicButton.setAttribute('aria-busy', 'false');
   } else if (wantsMusic) startMusic();
 });
 
 soundtrack.addEventListener('error', () => {
   if (!wantsMusic) return;
+  ++playRequest;
   wantsMusic = false;
+  clearGestureStart();
   showMusicState(false);
+  musicButton.setAttribute('aria-busy', 'false');
   musicStatus.textContent = 'Audio non disponibile. Tocca musica per riprovare.';
 });
+
+waitForGesture();
+startMusic();
