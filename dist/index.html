@@ -17,6 +17,22 @@
   <body>
     <main class="postcard" aria-labelledby="name">
       <img class="landscape" src="assets/stazione.webp" alt="" width="1086" height="1448" fetchpriority="high">
+      <svg class="motion-scene" viewBox="0 0 1086 1448" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">
+        <defs>
+          <clipPath id="cloud-band"><rect x="-1100" y="600" width="4400" height="490"/></clipPath>
+          <clipPath id="station-front"><rect y="1090" width="1086" height="358"/><path d="M68 966H80L91 1090H65Z"/></clipPath>
+        </defs>
+        <image href="assets/stazione-base.webp" width="1086" height="1448"/>
+        <g clip-path="url(#cloud-band)">
+          <g class="cloud-drift">
+            <image href="assets/nuvole.webp" x="-1086" y="640" width="1088" height="466" preserveAspectRatio="none"/>
+            <image href="assets/nuvole.webp" x="0" y="640" width="1088" height="466" preserveAspectRatio="none"/>
+            <image href="assets/nuvole.webp" x="1086" y="640" width="1088" height="466" preserveAspectRatio="none"/>
+          </g>
+        </g>
+        <image href="assets/stazione-base.webp" width="1086" height="1448" clip-path="url(#station-front)"/>
+        <g class="train-journey"><image href="assets/treno.webp" y="965" width="1400" height="466.667"/></g>
+      </svg>
       <div class="sky-tint" aria-hidden="true"></div>
       <div class="intro">
         <h1 id="name">Desca Inc.</h1>
@@ -29,6 +45,11 @@
           </a>
         </div>
       </div>
+      <button class="motion-toggle" type="button" aria-label="Metti in pausa l’animazione" aria-pressed="false" hidden>
+        <svg class="pause-symbol" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3h3v10H3zm7 0h3v10h-3z"/></svg>
+        <svg class="play-symbol" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h2v2h3v2h3v4H9v2H6v2H4z"/></svg>
+      </button>
     </main>
+    <script src="motion.js" defer></script>
   </body>
 </html>
