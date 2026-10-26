@@ -1,4 +1,4 @@
-"""Original airy ambience: a soft breeze and sparse major-pentatonic chimes."""
+"""Original sparse major-pentatonic chimes, without ambient noise."""
 from pathlib import Path
 import wave
 import numpy as np
@@ -6,31 +6,8 @@ import numpy as np
 RATE = 32000
 DURATION = 60
 COUNT = RATE * DURATION
-rng = np.random.default_rng(33)
-t = np.arange(COUNT) / RATE
-frequencies = np.fft.rfftfreq(COUNT, 1 / RATE)
 mix = np.zeros((COUNT, 2))
 
-
-def wind_texture():
-    # Filtering in the frequency domain gives a periodic, seamless noise bed.
-    spectrum = np.fft.rfft(rng.normal(size=COUNT))
-    f = np.maximum(frequencies, 1)
-    pink = 1 / np.sqrt(f)
-    high_pass = 1 - np.exp(-(f / 180) ** 4)
-    low_pass = np.exp(-(f / 1500) ** 2)
-    sound = np.fft.irfft(spectrum * pink * high_pass * low_pass, n=COUNT)
-    return sound / np.std(sound)
-
-
-common = wind_texture()
-# Three slow, periodic swells: air moving gently, without loud gusts or rumble.
-breath = .65 + .14 * np.sin(2 * np.pi * t / 20)
-breath += .09 * np.sin(2 * np.pi * t / 12 + .7)
-breath += .04 * np.cos(2 * np.pi * t / 7.5)
-for channel in range(2):
-    side = wind_texture()
-    mix[:, channel] = (.88 * common + .12 * side) * breath * .025
 
 
 def add_wrap(sound, start, pan=0, gain=1):
@@ -68,17 +45,16 @@ for i, (start, midi) in enumerate(notes):
         add_wrap(note, start + delay, -pan, strength * gain)
 
 mix -= mix.mean(axis=0)
-# Quiet, audible ambience with generous peak headroom.
-rms = np.sqrt(np.mean(mix ** 2))
-mix *= .065 / rms
+# Preserve the chimes' previous gain when removing the wind layer.
+mix *= 3.639641451872925
 peak = np.max(np.abs(mix))
 if peak > .38:
     mix *= .38 / peak
-output = Path(__file__).resolve().parents[1] / 'output' / 'music-breeze.wav'
+output = Path(__file__).resolve().parents[1] / 'output' / 'music-notes.wav'
 output.parent.mkdir(exist_ok=True)
 with wave.open(str(output), 'wb') as wav:
     wav.setnchannels(2)
     wav.setsampwidth(2)
     wav.setframerate(RATE)
     wav.writeframes((mix * 32767).astype('<i2').tobytes())
-print(f'Original breeze ambience: {DURATION}s, stereo, seamless loop. {output}')
+print(f'Original chimes (no wind): {DURATION}s, stereo, seamless loop. {output}')
