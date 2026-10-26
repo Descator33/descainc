@@ -21,10 +21,6 @@
         <defs>
           <clipPath id="cloud-band"><rect x="-1100" y="600" width="4400" height="490"/></clipPath>
           <clipPath id="station-front"><rect y="1090" width="1086" height="358"/><path d="M68 966H80L91 1090H65Z"/></clipPath>
-          <g id="pixel-bird" fill="#111111" shape-rendering="crispEdges">
-            <path class="wing-up" d="M0 0h4v2h4v2h3v2h2V4h3V2h4V0h4v4h-4v2h-4v2h-3v2h-2V8H8V6H4V4H0Z"/>
-            <path class="wing-down" d="M0 8h4V6h4V4h3V2h2v2h3v2h4v2h4v4h-4v-2h-4V8h-3V6h-2v2H8v2H4v2H0Z"/>
-          </g>
         </defs>
         <image href="assets/stazione-base.webp" width="1086" height="1448"/>
         <g clip-path="url(#cloud-band)">
@@ -36,10 +32,18 @@
         </g>
         <image href="assets/stazione-base.webp" width="1086" height="1448" clip-path="url(#station-front)"/>
         <g class="bird-flight">
-          <use href="#pixel-bird" x="0" y="635"/>
-          <use href="#pixel-bird" x="48" y="615"/>
-          <use href="#pixel-bird" x="100" y="648"/>
-          <use href="#pixel-bird" x="144" y="628"/>
+          <svg class="bird-sprite" x="0" y="635" width="64" height="64" viewBox="0 0 240 240" overflow="hidden" style="--wing-phase:-0.0s">
+            <image class="bird-frames" href="assets/uccello-sprite.webp" width="960" height="240"/>
+          </svg>
+          <svg class="bird-sprite" x="100" y="600" width="64" height="64" viewBox="0 0 240 240" overflow="hidden" style="--wing-phase:-0.125s">
+            <image class="bird-frames" href="assets/uccello-sprite.webp" width="960" height="240"/>
+          </svg>
+          <svg class="bird-sprite" x="210" y="650" width="64" height="64" viewBox="0 0 240 240" overflow="hidden" style="--wing-phase:-0.25s">
+            <image class="bird-frames" href="assets/uccello-sprite.webp" width="960" height="240"/>
+          </svg>
+          <svg class="bird-sprite" x="310" y="615" width="64" height="64" viewBox="0 0 240 240" overflow="hidden" style="--wing-phase:-0.375s">
+            <image class="bird-frames" href="assets/uccello-sprite.webp" width="960" height="240"/>
+          </svg>
         </g>
         <g class="train-journey"><image href="assets/treno.webp" y="965" width="1400" height="466.667"/></g>
       </svg>

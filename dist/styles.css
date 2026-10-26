@@ -40,13 +40,13 @@ footer{position:absolute;left:24px;right:24px;bottom:19px;display:flex;justify-c
 .motion-scene{--journey-duration:28s}
 .train-journey{transform:translateX(1100px);will-change:transform}
 .motion-ready .train-journey{animation:train-journey var(--journey-duration) linear infinite}
-.bird-flight{transform:translateX(-200px);will-change:transform}
+.bird-flight{transform:translateX(-400px);will-change:transform}
 .motion-ready .bird-flight{animation:bird-flight var(--journey-duration) linear 3s infinite}
-.wing-down{opacity:0}
-.motion-ready .wing-up{animation:bird-wing .7s steps(1,end) infinite}
-.motion-ready .wing-down{animation:bird-wing .7s steps(1,end) infinite reverse}
-@keyframes bird-wing{0%,49.99%{opacity:1}50%,100%{opacity:0}}
-@keyframes bird-flight{0%{transform:translateX(-200px)}55%,100%{transform:translateX(1300px)}}
+.bird-sprite{overflow:hidden;image-rendering:pixelated}
+.bird-frames{will-change:transform}
+.motion-ready .bird-frames{animation:bird-flap .5s steps(4,end) var(--wing-phase,0s) infinite}
+@keyframes bird-flap{from{transform:translateX(0)}to{transform:translateX(-960px)}}
+@keyframes bird-flight{0%{transform:translateX(-400px)}55%,100%{transform:translateX(1300px)}}
 @keyframes cloud-drift{from{transform:translateX(0)}to{transform:translateX(-1086px)}}
 @keyframes train-journey{from{transform:translateX(1100px)}to{transform:translateX(-1450px)}}
 .motion-paused .motion-scene *,.page-hidden .motion-scene *{animation-play-state:paused!important}

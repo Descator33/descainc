@@ -5,7 +5,7 @@ let loading;
 
 function prepareMotion() {
   if (reducedMotion.matches || loading) return;
-  loading = Promise.all(['stazione-base', 'nuvole', 'treno'].map(name => {
+  loading = Promise.all(['stazione-base', 'nuvole', 'treno', 'uccello-sprite'].map(name => {
     const image = new Image();
     image.src = `assets/${name}.webp`;
     return image.decode();
