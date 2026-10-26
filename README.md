@@ -28,7 +28,7 @@ Lo sprite `dist/assets/uccello-sprite.webp` è estratto con FFmpeg dal segmento 
 
 ## Musica
 
-`dist/assets/note.mp3` è un sottofondo originale sintetizzato con `scripts/compose-breeze.py` (NumPy e FFmpeg per la codifica MP3). Undici note morbide ispirate ai campanelli a vento, senza rumore del vento né altri suoni ambientali. Scala pentatonica maggiore di Re, senza bassi o accordi scuri: 60 secondi con code avvolte per un loop continuo. Il file audio si carica all’apertura per tentare la riproduzione automatica. Nessun campione o brano di terze parti. Le precedenti tracce `komorebi.mp3` e `brezza.mp3` restano disponibili come alternative, ma non vengono caricate dalla pagina.
+`dist/assets/melodia-soffice.mp3` è una composizione originale per pianoforte morbido: melodia legata in un registro medio, accordi consonanti arpeggiati e un leggero riverbero. 64 BPM, 60 secondi in loop, senza vento, rumori ambientali o campanelli. La parte è resa con il pianoforte di sistema macOS tramite AVFoundation; i picchi vengono contenuti direttamente nel file audio prima della codifica, anche per telefoni che non applicano il volume del player. Le precedenti tracce restano archiviate negli asset e non vengono caricate dalla pagina.
 
 `dist/music.js` gestisce attivazione/silenziamento, volume contenuto con dissolvenza, pausa nelle schede nascoste e messaggi di errore accessibili. Musica attiva per impostazione predefinita: tenta l’avvio automatico e, se il browser lo blocca, riprova al primo tocco o con Invio/Spazio. Il comando musica può avviarla o silenziarla; la scelta esplicita di silenziare resta rispettata durante la visita, anche passando tra schede. Nessuna preferenza persistente tra visite.
 
@@ -40,7 +40,7 @@ Repository: https://github.com/Descator33/descainc
 
 GitHub Pages pubblica automaticamente `dist/` a ogni push su `main` tramite `.github/workflows/pages.yml`. In Settings → Pages, la sorgente deve essere **GitHub Actions**. Il dominio personalizzato è `descainc.it`; `dist/CNAME` lo include nell’artefatto statico. Il workflow segue la [documentazione GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
 
-Per rigenerare il sottofondo attuale, installare NumPy e FFmpeg, eseguire `python3 scripts/compose-breeze.py`, quindi convertire `output/music-notes.wav` in `dist/assets/note.mp3`. I file in `output/` sono locali e ignorati da Git.
+Per rigenerare il sottofondo attuale su macOS, eseguire `swift scripts/compose-soft-piano.swift output/soft-piano-render.wav`, poi `python3 scripts/master-soft-piano.py` (NumPy e FFmpeg). Il renderer produce due cicli; il mastering conserva il secondo per mantenere le code del riverbero nel loop. I file in `output/` sono locali e ignorati da Git.
 
 ## Layout a schermo intero
 
