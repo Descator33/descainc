@@ -59,11 +59,18 @@
           </a>
         </div>
       </div>
+      <audio id="soundtrack" src="assets/komorebi.mp3" preload="none" loop></audio>
+      <button class="music-toggle" type="button" aria-label="Attiva musica" aria-pressed="false" aria-controls="soundtrack" hidden>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 3h9v2h-2v10h-2v2H9v-2H7v-2h2v-2h4V6H8v9H6v2H2v-2H0v-2h2v-2h4V3z" fill="currentColor"/><path class="music-off" d="M1 1l17 17" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        <span>musica</span>
+      </button>
+      <p id="music-status" class="music-status" role="status" aria-live="polite"></p>
       <button class="motion-toggle" type="button" aria-label="Metti in pausa l’animazione" aria-pressed="false" hidden>
         <svg class="pause-symbol" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3h3v10H3zm7 0h3v10h-3z"/></svg>
         <svg class="play-symbol" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2h2v2h3v2h3v4H9v2H6v2H4z"/></svg>
       </button>
     </main>
     <script src="motion.js" defer></script>
+    <script src="music.js" defer></script>
   </body>
 </html>
