@@ -38,4 +38,6 @@ La cartella da pubblicare è `dist/`: contiene la pagina e tutti gli asset, senz
 
 Repository: https://github.com/Descator33/descainc
 
+GitHub Pages pubblica automaticamente `dist/` a ogni push su `main` tramite `.github/workflows/pages.yml`. In Settings → Pages, la sorgente deve essere **GitHub Actions**. Il dominio personalizzato è `descainc.it`; `dist/CNAME` lo include nell’artefatto statico. Il workflow segue la [documentazione GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
 Per rigenerare la musica originale, installare NumPy e FFmpeg, eseguire `python3 scripts/compose-music.py`, quindi convertire `output/music-original.wav` in `dist/assets/komorebi.mp3`. I file in `output/` sono locali e ignorati da Git.
